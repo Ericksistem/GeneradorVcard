@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Código QR</title>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: rgba(0, 0, 0, 0.836);
+        }
+        .container {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            box-shadow: #ffffff;
+        }
+        label {
+            font-weight: 500;
+            color: #555;
+        }
+        input {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px;
+            background-color: #1ec47f;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #1ec47f;
+        }
+        #qr-code {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>GENERADOR DE CODIGO QR</h1>
+
+        <!-- Formulario para ingresar información -->
+        <form id="qr-form">
+            <label for="firstname">Nombre:</label>
+            <input type="text" id="firstname" placeholder="Nombre" required>
+
+            <label for="lastname">Apellido:</label>
+            <input type="text" id="lastname" placeholder="Apellido" required>
+
+            <label for="phone">Teléfono:</label>
+            <input type="tel" id="phone" placeholder="Teléfono" required>
+
+            <label for="position">Posición:</label>
+            <input type="text" id="position" placeholder="Posición" required>
+
+            <label for="email">Correo:</label>
+            <input type="email" id="email" placeholder="Correo" required>
+
+            <label for="website">Website:</label>
+            <input type="url" id="website" placeholder="Website">
+
+            <label for="company">Empresa:</label>
+            <input type="text" id="company" placeholder="Empresa">
+
+            <!-- Botón para generar el QR -->
+            <button type="button" onclick="generarQR()">Generar QR</button>
+        </form>
+
+        <!-- Contenedor donde se mostrará el código QR -->
+        <div id="qr-code"></div>
+    </div>
+
+    <script>
+        function generarQR() {
+            const firstname = document.getElementById('firstname').value;
+            const lastname = document.getElementById('lastname').value;
+            const phone = document.getElementById('phone').value;
+            const position = document.getElementById('position').value;
+            const email = document.getElementById('email').value;
+            const website = document.getElementById('website').value;
+            const company = document.getElementById('company').value;
+
+            if (!firstname || !lastname || !phone || !position || !email) {
+                alert('Por favor, completa todos los campos obligatorios.');
+                return;
+            }
+
+            // Crear formato vCard con codificación adecuada
+            const vCard = `BEGIN:VCARD\nVERSION:3.0\nN:${lastname};${firstname};;\nORG:${company}\nTITLE:${position}\nTEL;TYPE=WORK,VOICE:${phone}\nEMAIL:${email}\nURL:${website}\nEND:VCARD`;
+
+            // Limpiar cualquier QR previo
+            document.getElementById('qr-code').innerHTML = '';
+
+            // Generar el QR
+            QRCode.toCanvas(vCard, { errorCorrectionLevel: 'H' }, function (error, canvas) {
+                if (error) {
+                    console.error(error);
+                    alert('Hubo un error al generar el código QR');
+                } else {
+                    document.getElementById('qr-code').appendChild(canvas);
+                    console.log('Código QR generado!');
+                }
+            });
+        }
+    </script>
+</body>
+</html>
